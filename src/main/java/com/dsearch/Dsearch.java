@@ -1,6 +1,7 @@
 package com.dsearch;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Scanner;
 import com.dsearch.db.*;
 public class Dsearch {
@@ -23,16 +24,24 @@ public class Dsearch {
 		Indexer indexer = new Indexer();
 		File[] files = searchDir.listFiles();
 		for (File file: files) {
-			indexer.load(db, file);
+			try {
+				indexer.load(db, file);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				System.out.println("couldn't load file: " + file.getAbsoluteFile());
+
+			}
 		};
 
 		Scanner stdIn  = new Scanner(System.in); 
 		String nextCommand = "";
-		while (! nextCommand.equals(":exit")) {
+		while (!nextCommand.equals(":exit")) {
 			switch (nextCommand) {
 			case ":help":
 				System.out.println("Do you need some help");
 				break;
+			case "":
+				break;	
 			default:
 				System.out.println(nextCommand);
 				String results = db.search(nextCommand);
