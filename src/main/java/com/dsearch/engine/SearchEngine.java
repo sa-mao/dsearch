@@ -21,8 +21,8 @@ public class SearchEngine {
 		Query query = new Query(keywords);
 		for (String keyword: query.getKeywords()) {
 			if (keyword != null) {				
-				Word word = this.db.findWord(keyword);	
-				if (word != null) {				
+				Word word = this.db.findWord(keyword);
+				if (word != null) {
 					for (String filename: word.getFilepaths().keySet()) {
 						query.addResult(filename);
 					}
