@@ -1,9 +1,13 @@
 package com.dsearch;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Scanner;
 import com.dsearch.db.*;
+import com.dsearch.engine.SearchEngine;
 public class Dsearch {
 
 	public static void main(String[] args) {
@@ -20,19 +24,24 @@ public class Dsearch {
 		 
 		String dbName = searchDir.getName();
 		Db db = new Db(dbName);
+		SearchEngine engine = new SearchEngine(db);
 		
 		Indexer indexer = new Indexer();
 		File[] files = searchDir.listFiles();
+		long startTime = System.nanoTime();
 		for (File file: files) {
 			try {
-				indexer.load(db, file);
+				InputStream in = new FileInputStream(file);
+				InputStreamReader reader = new InputStreamReader(in);
+				indexer.load(db, reader, file.getAbsolutePath());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				System.out.println("couldn't load file: " + file.getAbsoluteFile());
 
 			}
 		};
-
+		long endTime = System.nanoTime();
+		System.out.println("Indexing took: " + (endTime - startTime)/1000000 + "ms");
 		Scanner stdIn  = new Scanner(System.in); 
 		String nextCommand = "";
 		while (!nextCommand.equals(":exit")) {
@@ -43,9 +52,11 @@ public class Dsearch {
 			case "":
 				break;	
 			default:
-				System.out.println(nextCommand);
-				String results = db.search(nextCommand);
+				startTime = System.nanoTime();
+				String results = engine.execQuery(nextCommand);
+				endTime = System.nanoTime();
 				System.out.println(results);
+				System.out.println("Query duration: " + (endTime - startTime)/1000000 + "ms");
 				break;
 			}
 		    System.out.print(">");
