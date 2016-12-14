@@ -55,6 +55,7 @@ public class Word {
 		} else {
 			filePathEntry = new ArrayList<Integer>();
 			filePathEntry.add(pos);
+			this.filepaths.remove(filename);
 			this.filepaths.put(filename, filePathEntry);
 		}
 		this.setCount(this.getCount() + 1);
