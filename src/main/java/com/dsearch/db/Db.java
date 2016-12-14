@@ -63,13 +63,14 @@ public class Db {
 			Word newWord = new Word();
 			newWord.setValue(word.getValue());
 			newWord.updateFilepath(filename, pos);
-			this.records.put(newWord.getValue(), word);
+			this.records.put(newWord.getValue(), newWord);
 		}
-		
+			
 	}
 	public void keys() {
 		for (String key: this.records.keySet()){
-			System.out.println(key);
+			System.out.println(this.records.get(key).getValue());
+			System.out.println(this.records.get(key).getFilepaths());
 		}; 
 	}
 	public void values() {
